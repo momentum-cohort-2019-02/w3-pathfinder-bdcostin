@@ -24,7 +24,7 @@ class DrawMap:
     def __init__(self, Map, point):
         self.Map = Map
         self.picture = Image.new('RGBA', (len(self.Map.elevations[0]), len(self.Map.elevations)))
-        self.drawing = ImageDraw.Draw(self.picture)
+        # self.drawing = ImageDraw.Draw(self.picture)
         self.point = point
 
     def draw(self):
@@ -37,10 +37,11 @@ class DrawMap:
     # This is the part that is messed up...
     def print_path(self, point):
         '''This should plot the pathfinder points'''
-        for self.cur_y in point:
-            self.picture.putpixel((point[0], point[1]), (156, 226, 227))
+        for item_point in point:
+            self.picture.putpixel(item_point, (156, 226, 227))
         self.picture.save('pathfinder_map.png')
-        
+        return self.picture
+
 class Pathfinder:
 
     def __init__(self, Map):
@@ -68,15 +69,16 @@ class Pathfinder:
 
             cur_x += 1
             cur_y = next_y
-            return self.point.append(cur_x, cur_y)
+            self.point.append((cur_x, cur_y))
+        return self.point
 
 
 if __name__ == '__main__':
 
     elevation_map = Map('elevation_small.txt')
-    point = []
-    draw_elevation_map = DrawMap(elevation_map, point)
+    point = Pathfinder(elevation_map)
+    draw_elevation_map = DrawMap(elevation_map, point.jank_pathfinder())
     draw_elevation_map.draw()
-    draw_elevation_map.print_path(point)
+    draw_elevation_map.print_path(point.jank_pathfinder())
     pathfinder = Pathfinder(elevation_map)
     
